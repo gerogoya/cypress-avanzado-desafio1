@@ -47,11 +47,6 @@ export class ShopPage {
     this.elements.logoutButton().click();
   }
 
-  /*   searchNewProductByiD(productId) {
-    this.elements.searchTypeSelect().select("ID");
-    this.elements.searchInput().type(productId + "{enter}");
-  } */
-
   removeProduct() {
     this.elements
       .productNameLabel()
