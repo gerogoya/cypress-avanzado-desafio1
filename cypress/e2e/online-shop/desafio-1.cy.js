@@ -10,50 +10,52 @@ describe("Desafio 1", () => {
   const homepage = new HomePage();
   const shoppage = new ShopPage();
   const cartpage = new CartPage();
-  let varFixture;
-  let credentialsData;
+  let productFixture;
 
   before(function NameBefore() {
     cy.fixture("products").then((data) => {
-      varFixture = data;
-    });
-
-    cy.fixture("credentials").then((data) => {
-      credentialsData = data;
+      productFixture = data;
     });
   });
-  beforeEach(function NameBeforeEach() {});
-  after(function NameAfter() {});
-  afterEach(function NameAfterEach() {});
 
   context("Add/Remove item from Shoping cart", () => {
     it("Add an item to the shopping cart and then remove it", () => {
       //test
-      cy.visit("https://pushing-front.vercel.app/");
+      cy.visit("/");
       registerpage.dblClickLogin_Link();
-      loginpage.login(
-        `${credentialsData.username}`,
-        `${credentialsData.password}`
-      );
+      loginpage.login(Cypress.env("username"), Cypress.env("password"));
       homepage.goToOnlineShop();
-      shoppage.selectProduct(`#${varFixture.productId}`);
+      shoppage.clickAddProduct();
+      shoppage.addNewProduct(
+        `${productFixture.productName}`,
+        `${productFixture.productPrice}`,
+        `${productFixture.imageUrl}`,
+        `${productFixture.productId}`
+      );
+
+      shoppage.elements
+        .messageAlertModal()
+        .should("include.text", `${productFixture.productName} has been added`);
       shoppage.closeModal();
-      shoppage.clickOnGoToCart();
-
-      cartpage.elements
-        .productNameCell()
-        .contains(varFixture.productName)
+      shoppage.searchNewProductByiD(`${productFixture.productId}`);
+      shoppage.elements
+        .productNameLabel()
+        .contains(`${productFixture.productName}`)
         .should("exist");
+      shoppage.elements
+        .productNameLabel()
+        .should("have.text", `${productFixture.productName}`);
 
-      cartpage.elements
-        .productNameCell()
-        .contains(varFixture.productName)
-        .parents("div[direction='column']")
-        .find("button")
-        .click();
-      cartpage.elements
-        .cartItemsTable()
-        .contains(varFixture.productName)
+      shoppage.removeProduct();
+      cy.contains(`${productFixture.productName} has been deleted`).should(
+        "exist"
+      );
+      shoppage.elements.closeModalButton().click();
+      shoppage.elements.searchInput().clear();
+      shoppage.searchNewProductByiD(`${productFixture.productId}`);
+      shoppage.elements
+        .productNameLabel()
+        .contains(`${productFixture.productName}`)
         .should("not.exist");
     });
   });
