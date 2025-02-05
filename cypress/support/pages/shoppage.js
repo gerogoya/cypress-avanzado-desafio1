@@ -15,6 +15,7 @@ export class ShopPage {
 
     productNameLabel: () => cy.get('[data-cy="name"]'),
     deleteProductButton: () => cy.get("#saveEdit"),
+    logoutButton: () => cy.get('[data-cy="logout"]'),
   };
 
   addNewProduct(productName, productPrice, ImageUrl, productId) {
@@ -37,10 +38,19 @@ export class ShopPage {
     this.elements.goShoppingCartButton().click();
   }
 
-  searchNewProductByiD(productId) {
+  searchNewProductBy(searchType, value) {
+    this.elements.searchTypeSelect().select(searchType);
+    this.elements.searchInput().type(value + "{enter}");
+  }
+
+  logoutButton() {
+    this.elements.logoutButton().click();
+  }
+
+  /*   searchNewProductByiD(productId) {
     this.elements.searchTypeSelect().select("ID");
     this.elements.searchInput().type(productId + "{enter}");
-  }
+  } */
 
   removeProduct() {
     this.elements

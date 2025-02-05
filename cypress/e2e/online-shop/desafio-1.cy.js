@@ -37,11 +37,11 @@ describe("Desafio 1", () => {
         .messageAlertModal()
         .should("include.text", `${productFixture.productName} has been added`);
       shoppage.closeModal();
-      shoppage.searchNewProductByiD(`${productFixture.productId}`);
+      shoppage.searchNewProductBy("ID", `${productFixture.productId}`);
       shoppage.elements
         .productNameLabel()
         .contains(`${productFixture.productName}`)
-        .should("exist");
+        .should("be.visible");
       shoppage.elements
         .productNameLabel()
         .should("have.text", `${productFixture.productName}`);
@@ -52,11 +52,13 @@ describe("Desafio 1", () => {
       );
       shoppage.elements.closeModalButton().click();
       shoppage.elements.searchInput().clear();
-      shoppage.searchNewProductByiD(`${productFixture.productId}`);
+      shoppage.searchNewProductBy("ID", `${productFixture.productId}`);
       shoppage.elements
         .productNameLabel()
         .contains(`${productFixture.productName}`)
         .should("not.exist");
+
+      shoppage.logoutButton();
     });
   });
 });
